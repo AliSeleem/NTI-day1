@@ -1,32 +1,33 @@
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import DBInit from "./Config/DB";
+import mountRoutes from "./Routers";
+import { Server } from "http";
 
 // env config
 dotenv.config();
 
 // app init
 const app: express.Application = express();
-
+let server: Server;
 // middleware
 app.use(express.json());
 
 // database connection
-mongoose
-	.connect(process.env.DB!)
-	.then(() => {
-		console.log(`Database connected to : ${process.env.DB}`);
-	})
-	.catch((err: Error) => {
-		console.log(err);
-	});
+DBInit();
 
 // main endpoint
-app.get("/", (req: express.Request, res: express.Response) => {
-	res.json({ msg: "Hello World!" });
-});
+mountRoutes(app);
 
 // app listening
-app.listen(process.env.PORT, () => {
-	console.log(`Server is running on port ${process.env.PORT}`);
+server = app.listen(process.env.PORT, () => {
+	console.log(`Server is running on http://localhost:${process.env.PORT}/`);
+});
+
+process.on("unhandledRejection", (err: Error) => {
+	console.error(`unhandledRejection ${err.name} | ${err.message}`);
+	server.close(() => {
+		console.error("shutting the application down");
+		process.exit(1);
+	});
 });

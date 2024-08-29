@@ -10,8 +10,10 @@ dotenv.config();
 // app init
 const app: express.Application = express();
 let server: Server;
+
 // middleware
 app.use(express.json());
+app.use(express.static("uploads"));
 
 // database connection
 DBInit();

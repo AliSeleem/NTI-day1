@@ -3,6 +3,7 @@ import { check } from "express-validator";
 import validatorMiddleware from "../../Middleware/validatorMiddleware";
 import CategoriesModel from "../../Models/CategoriesModel";
 import SubCategoriesModel from "../../Models/SubCategoriesModel";
+import { SubCategories } from "../../interfaces/SubCategories";
 
 export const getCategoryValidator: RequestHandler[] = [
 	check("id").isMongoId().withMessage("Invalid mongo Id"),
@@ -10,7 +11,21 @@ export const getCategoryValidator: RequestHandler[] = [
 ];
 
 export const deleteCategoryValidator: RequestHandler[] = [
-	check("id").isMongoId().withMessage("Invalid mongo Id"),
+	check("id")
+		.isMongoId()
+		.withMessage("Invalid mongo Id")
+		.custom(async (val) => {
+			const subcategories: SubCategories[] = await SubCategoriesModel.find({
+				category: val,
+			});
+			if (subcategories.length > 0) {
+				const bulkOption = subcategories.map((subcategory: SubCategories) => {
+					return { deleteOne: { filter: { _id: subcategory._id } } };
+				});
+				await SubCategoriesModel.bulkWrite(bulkOption);
+			}
+			return true;
+		}),
 	validatorMiddleware,
 ];
 

@@ -6,8 +6,6 @@ import {
 	getSubCategory,
 	updateSubCategory,
 } from "../Controllers/SubCategories";
-import { param } from "express-validator";
-import validatorMiddleware from "../Middleware/validatorMiddleware";
 import {
 	createSubCategoryValidator,
 	deleteSubCategoryValidator,

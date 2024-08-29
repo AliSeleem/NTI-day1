@@ -1,3 +1,5 @@
-export interface Categories {
+import { Document } from "mongoose";
+
+export interface Categories extends Document {
 	name: string;
 }

@@ -14,6 +14,7 @@ import {
 	deleteUserValidator,
 	getUserValidator,
 	updateUserValidator,
+	changeUserPasswordValidator
 } from "../utils/validation/usersValidator";
 import { allowedTo, checkActive, protectRoutes } from "../Controllers/auth";
 const usersRouter = express.Router();
@@ -33,6 +34,6 @@ usersRouter
 	.put(uploadUserImage, resizeUserImage, updateUserValidator, updateUser)
 	.delete(deleteUserValidator, deleteUser);
 
-usersRouter.put("/:id/changePassword", changeUserPassword);
+usersRouter.put("/:id/changePassword",changeUserPasswordValidator, changeUserPassword);
 
 export default usersRouter;

@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { check } from "express-validator";
 import validatorMiddleware from "../../Middleware/validatorMiddleware";
 import usersModel from "../../Models/usersModel";
+import bcrypt from "bcryptjs";
 
 export const createUserValidator: RequestHandler[] = [
 	check("name")
@@ -61,7 +62,6 @@ export const deleteUserValidator: RequestHandler[] = [
 
 // todo: user change password validator
 export const changeUserPasswordValidator: RequestHandler[] = [
-	check("id").isMongoId().withMessage("Invalid Mongo Id"),
 	check("password")
 		.notEmpty()
 		.isLength({ min: 8, max: 20 })
@@ -76,5 +76,46 @@ export const changeUserPasswordValidator: RequestHandler[] = [
 			}
 			return true;
 		}),
+	validatorMiddleware,
+];
+
+export const updateLoggedUserValidator: RequestHandler[] = [
+	check("name")
+		.optional()
+		.isLength({ min: 2, max: 50 })
+		.withMessage("Name length must be between 2 and 50"),
+	validatorMiddleware,
+];
+
+export const changeLoggedUserPasswordValidator: RequestHandler[] = [
+	check("currentPassword")
+		.notEmpty()
+		.withMessage("current password required")
+		.isLength({ min: 8, max: 20 })
+		.withMessage("current password length must between 8 and 20 char"),
+	check("password")
+		.notEmpty()
+		.withMessage("password required")
+		.isLength({ min: 8, max: 20 })
+		.withMessage("password length must between 8 and 20 char")
+		.custom(async (val: string, { req }) => {
+			const user = await usersModel.findById(req.user._id);
+			const isCorrectPassword: boolean = await bcrypt.compare(
+				req.body.currentPassword,
+				user!.password
+			);
+			if (!isCorrectPassword) {
+				throw new Error("current password invalid");
+			}
+			if (val !== req.body.confirmPassword) {
+				throw new Error("passwords doesn't match");
+			}
+			return true;
+		}),
+	check("confirmPassword")
+		.notEmpty()
+		.withMessage("confirm password required")
+		.isLength({ min: 8, max: 20 })
+		.withMessage("confirm password length must between 8 and 20 char"),
 	validatorMiddleware,
 ];

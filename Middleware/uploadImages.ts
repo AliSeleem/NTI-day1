@@ -8,10 +8,10 @@ const uploadOptions = (): multer.Multer => {
 
 	const multerFilter = function (
 		req: Request,
-		file: multer.Multer.file,
+		file: Express.Multer.File,
 		cb: multer.FileFilterCallback
 	) {
-		if (file.mimetype.startWith("image")) {
+		if (file.mimetype.startsWith("image")) {
 			cb(null, true);
 		} else {
 			cb(new ApiError("file Not an image", 400));

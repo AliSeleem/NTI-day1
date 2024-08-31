@@ -8,21 +8,39 @@ import {
 	resizeUserImage,
 	updateUser,
 	changeUserPassword,
+	setLoggedUserId,
+	changeLoggedUserPassword,
 } from "../Controllers/Users";
 import {
 	createUserValidator,
 	deleteUserValidator,
 	getUserValidator,
 	updateUserValidator,
-	changeUserPasswordValidator
+	changeUserPasswordValidator,
+	updateLoggedUserValidator,
+	changeLoggedUserPasswordValidator,
 } from "../utils/validation/usersValidator";
 import { allowedTo, checkActive, protectRoutes } from "../Controllers/auth";
 const usersRouter = express.Router();
 
 // authrization middleware
-usersRouter.use(protectRoutes, checkActive, allowedTo("manager"));
+usersRouter.use(protectRoutes, checkActive);
 
-// CRUD operations
+// user operations
+usersRouter.get("/me", setLoggedUserId, getUser);
+
+usersRouter.put("/updatMe", updateLoggedUserValidator, getUser);
+
+usersRouter.put(
+	"/changeMyPassword",
+	changeLoggedUserPasswordValidator,
+	changeLoggedUserPassword
+);
+
+usersRouter.delete("/deleteMe", allowedTo("user"), setLoggedUserId, deleteUser);
+
+// manager operations
+usersRouter.use(allowedTo("manager"));
 usersRouter
 	.route("/")
 	.get(getUsers)
@@ -34,6 +52,10 @@ usersRouter
 	.put(uploadUserImage, resizeUserImage, updateUserValidator, updateUser)
 	.delete(deleteUserValidator, deleteUser);
 
-usersRouter.put("/:id/changePassword",changeUserPasswordValidator, changeUserPassword);
+usersRouter.put(
+	"/:id/changePassword",
+	changeUserPasswordValidator,
+	changeUserPassword
+);
 
 export default usersRouter;

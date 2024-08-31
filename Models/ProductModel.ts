@@ -30,27 +30,33 @@ const productSchema: Schema = new Schema<Product>(
 			ref: "subCategories",
 		},
 	},
-	{ timestamps: true }
+	{ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-const imageUrl = (doc: Product) => {
-	if (doc.cover) {
-		const imageUrl: string = `${process.env.BASE_URL}/products/${doc.cover}`;
-		doc.cover = imageUrl;
-	}
-	if (doc.images) {
-		const imgesList: string[] = [];
-		doc.images.forEach((image: string) => {
-			const imageUrl: string = `${process.env.BASE_URL}/products/${image}`;
-			imgesList.push(imageUrl);
-		});
-		doc.images = imgesList;
-	}
-};
+productSchema.virtual("reviews", {
+	ref: "reviews",
+	foreignField: "product",
+	localField: "_id",
+});
 
-productSchema
-	.post("init", (doc: Product) => imageUrl(doc))
-	.post("save", (doc: Product) => imageUrl(doc));
+// const imageUrl = (doc: Product) => {
+// 	if (doc.cover) {
+// 		const imageUrl: string = `${process.env.BASE_URL}/products/${doc.cover}`;
+// 		doc.cover = imageUrl;
+// 	}
+// 	if (doc.images) {
+// 		const imgesList: string[] = [];
+// 		doc.images.forEach((image: string) => {
+// 			const imageUrl: string = `${process.env.BASE_URL}/products/${image}`;
+// 			imgesList.push(imageUrl);
+// 		});
+// 		doc.images = imgesList;
+// 	}
+// };
+
+// productSchema
+// 	.post("init", (doc: Product) => imageUrl(doc))
+// 	.post("save", (doc: Product) => imageUrl(doc));
 
 productSchema.pre<Product>(/^find/, function (next) {
 	this.populate({ path: "category", select: "name" });

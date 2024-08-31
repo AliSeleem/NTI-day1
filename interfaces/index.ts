@@ -1,11 +1,9 @@
-import { filterData } from "./filterData";
+import { FilterData } from "./filterData";
 import { Users } from "./user";
-
-// TODO: fix this errorrrrrrrrrrr
 
 declare module "express" {
 	interface Request {
-		filterData?: filterData;
+		filterData?: FilterData;
 		files?: any;
 		user?: Users;
 	}

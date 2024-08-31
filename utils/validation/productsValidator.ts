@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
 import { check } from "express-validator";
 import validatorMiddleware from "../../Middleware/validatorMiddleware";
-import categoriesModel from "../../models/categoriesModel";
-import subCategoriesModel from "../../models/subCategoriesModel";
+import CategoriesModel from "../../Models/CategoriesModel";
+import SubCategoriesModel from "../../Models/SubCategoriesModel";
 import { SubCategories } from "../../interfaces/SubCategories";
 
 export const createProductValidator: RequestHandler[] = [
@@ -56,7 +56,7 @@ export const createProductValidator: RequestHandler[] = [
 		.withMessage("Invalid Mongo Id")
 		// * Check if category exist
 		.custom(async (val) => {
-			const category = await categoriesModel.findById(val);
+			const category = await CategoriesModel.findById(val);
 			if (!category) {
 				throw new Error("Category Not Found");
 			}
@@ -70,7 +70,7 @@ export const createProductValidator: RequestHandler[] = [
 		// * Check if subcategory exist
 		.custom(async (val, { req }) => {
 			const subcategory: SubCategories | null =
-				await subCategoriesModel.findById(val);
+				await SubCategoriesModel.findById(val);
 			if (!subcategory) {
 				throw new Error("Subcategory Not Found");
 			}
@@ -129,7 +129,7 @@ export const updateProductValidator: RequestHandler[] = [
 		.withMessage("Invalid Mongo Id")
 		// * Check if category exist
 		.custom(async (val) => {
-			const category = await categoriesModel.findById(val);
+			const category = await CategoriesModel.findById(val);
 			if (!category) {
 				throw new Error("Category Not Found");
 			}
@@ -142,7 +142,7 @@ export const updateProductValidator: RequestHandler[] = [
 		// * Check if subcategory exist
 		.custom(async (val, { req }) => {
 			const subcategory: SubCategories | null =
-				await subCategoriesModel.findById(val);
+				await SubCategoriesModel.findById(val);
 			if (!subcategory) {
 				throw new Error("Subcategory Not Found");
 			}

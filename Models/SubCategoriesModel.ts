@@ -9,6 +9,7 @@ const subCategoriesSchema: Schema = new Schema<SubCategories>(
 			required: true,
 			ref: "categories",
 		},
+		image: String,
 	},
 	{ timestamps: true }
 );

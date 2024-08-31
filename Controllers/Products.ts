@@ -50,7 +50,7 @@ export const createProduct = createOne<Product>(ProductModel);
 
 export const getProducts = getAll<Product>(ProductModel, "Product");
 
-export const getProduct = getOne<Product>(ProductModel);
+export const getProduct = getOne<Product>(ProductModel, "reviews");
 
 export const updateProduct = updateOne<Product>(ProductModel);
 

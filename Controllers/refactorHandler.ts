@@ -11,7 +11,7 @@ export const getAll = <modelType>(
 ) =>
 	asyncHandler(
 		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let filterData: filterData = {};
+			let filterData: FilterData = {};
 			if (req.filterData) {
 				filterData = req.filterData;
 			}
@@ -39,11 +39,17 @@ export const getAll = <modelType>(
 		}
 	);
 
-export const getOne = <modeltype>(model: mongoose.Model<any>) =>
+export const getOne = <modeltype>(
+	model: mongoose.Model<any>,
+	population?: string
+) =>
 	asyncHandler(
 		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const { id } = req.params;
-			const doc = await model.findById(id);
+			let query = await model.findById(req.params.id);
+			if (population) {
+				query = query.populate(population);
+			}
+			const doc = await query;
 			if (!doc) {
 				return next(new ApiError("Document Not found", 404));
 			}

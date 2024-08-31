@@ -1,8 +1,23 @@
 import { Router } from "express";
-import { login, signup } from "../Controllers/auth";
-import {loginValidator, signupValidator} from"../utils/validation/authValidator"
-const authRoute = Router();
+import {
+	forgetPassword,
+	login,
+	resetCode,
+	signup,
+	verifyResetCode,
+} from "../Controllers/auth";
+import {
+	loginValidator,
+	resetCodeValidator,
+	sendMailValidator,
+	signupValidator,
+} from "../utils/validation/authValidator";
+const authRouter = Router();
 
-authRoute.route("/signup").post(signupValidator, signup);
-authRoute.route("/login").post(loginValidator, login);
-export default authRoute;
+authRouter.route("/signup").post(signupValidator, signup);
+authRouter.route("/login").post(loginValidator, login);
+authRouter.route("/forgetPassword").post(sendMailValidator, forgetPassword);
+authRouter.route("/verifyCode").post(verifyResetCode);
+authRouter.route("/resetCode").post(resetCodeValidator, resetCode);
+
+export default authRouter;

@@ -7,6 +7,7 @@ import ApiError from "../utils/ApiError";
 import { uploadSingleImage } from "../Middleware/uploadImages";
 import sharp from "sharp";
 import bcrypt from "bcryptjs";
+import { createToken } from "../utils/createToken";
 
 //  defualt CRUD operations -But without U-
 export const getUsers = getAll<Users>(usersModel, "users");
@@ -65,5 +66,42 @@ export const changeUserPassword = asyncHandler(
 		res
 			.status(200)
 			.json({ data: user, message: "Password updated successfully" });
+	}
+);
+
+// Logged users operations
+export const setLoggedUserId = asyncHandler(
+	(req: Request, res: Response, next: NextFunction) => {
+		req.params.id = req.user?._id!.toString();
+		next();
+	}
+);
+
+export const updateLoggedUser = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const user = await usersModel.findByIdAndUpdate(
+			req.user?._id,
+			{
+				name: req.body.name,
+				image: req.body.image,
+			},
+			{ new: true }
+		);
+		res.status(200).json({ data: user, message: "user updated successfully" });
+	}
+);
+
+export const changeLoggedUserPassword = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const user = await usersModel.findByIdAndUpdate(
+			req.user?.id,
+			{
+				password: await bcrypt.hash(req.body.password, 13),
+				passwordChangedAt: Date.now(),
+			},
+			{ new: true }
+		);
+		const token: string = createToken(user?._id);
+		res.status(200).json({ message: "password changed successfully", token });
 	}
 );

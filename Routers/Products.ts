@@ -5,6 +5,8 @@ import {
 	getProducts,
 	getProduct,
 	updateProduct,
+	uploadProductImages,
+	resizeImages,
 } from "../Controllers/Products";
 import {
 	createProductValidator,
@@ -12,14 +14,35 @@ import {
 	getProductValidator,
 	updateProductValidator,
 } from "../utils/validation/productsValidator";
-const CategoriesRouter = express.Router();
+import { allowedTo, checkActive, protectRoutes } from "../Controllers/auth";
+const ProductsRouter = express.Router();
 
-CategoriesRouter.route("/")
+ProductsRouter.route("/")
 	.get(getProducts)
-	.post(createProductValidator, createProduct);
-CategoriesRouter.route("/:id")
+	.post(
+		protectRoutes,
+		checkActive,
+		allowedTo("manager", "admin"),
+		uploadProductImages,
+		resizeImages,
+		createProductValidator,
+		createProduct
+	);
+ProductsRouter.route("/:id")
 	.get(getProductValidator, getProduct)
-	.put(updateProductValidator, updateProduct)
-	.delete(deleteProductValidator, deleteProduct);
+	.put(
+		protectRoutes,
+		checkActive,
+		allowedTo("manager", "admin"),
+		updateProductValidator,
+		updateProduct
+	)
+	.delete(
+		protectRoutes,
+		checkActive,
+		allowedTo("manager", "admin"),
+		deleteProductValidator,
+		deleteProduct
+	);
 
-export default CategoriesRouter;
+export default ProductsRouter;

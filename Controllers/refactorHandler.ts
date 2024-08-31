@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
-import { filterData } from "../interfaces/filterData";
+import { FilterData } from "../interfaces/filterData";
 import features from "../utils/features";
 import ApiError from "../utils/ApiError";
 

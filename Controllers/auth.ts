@@ -119,7 +119,7 @@ export const verifyResetCode = asyncHandler(
 		}
 		const decodedToken: any = Jwt.verify(
 			resetToken,
-			process.env.JWT_SECRET_KEY
+			process.env.JWT_SECRET_KEY!
 		);
 		const hashedResetcCode: string = crypto
 			.createHash("sha256")

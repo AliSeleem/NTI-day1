@@ -45,7 +45,7 @@ export const createProductValidator: RequestHandler[] = [
 		.toInt()
 		.custom((val: number) => {
 			if (val < 0) {
-				throw new Error("Invalid Quantity");
+				throw new Error("Invalid quantity");
 			}
 			return true;
 		}),
@@ -119,7 +119,7 @@ export const updateProductValidator: RequestHandler[] = [
 		.toInt()
 		.custom((val: number) => {
 			if (val < 0) {
-				throw new Error("Invalid Quantity");
+				throw new Error("Invalid quantity");
 			}
 			return true;
 		}),

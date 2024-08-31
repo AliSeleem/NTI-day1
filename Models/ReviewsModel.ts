@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 import { reviews } from "../interfaces/reviews";
 import ProductModel from "./ProductModel";
 
-const revi	ewsSchema: Schema = new Schema<reviews>(
+const reviewsSchema: Schema = new Schema<reviews>(
 	{
 		comment: { type: String, required: true },
 		rating: { type: Number, required: true, min: 1, max: 5 },
@@ -12,20 +12,20 @@ const revi	ewsSchema: Schema = new Schema<reviews>(
 	{ timestamps: true }
 );
 
-reviewsSchema.statics.calcRatingAndQuantity = async function (productId) {
+reviewsSchema.statics.calcRatingAndquantity = async function (productId) {
 	const result = await this.aggregate([
 		{ $match: { product: productId } },
 		{
 			$group: {
 				_id: "product",
 				avgRating: { $avg: "$rating" },
-				ratingQuantity: { $sum: 1 },
+				ratingquantity: { $sum: 1 },
 			},
 		},
 	]);
 	if (result.length > 0) {
 		await ProductModel.findByIdAndUpdate(productId, {
-			ratesCount: result[0].ratingQuantity,
+			ratesCount: result[0].ratingquantity,
 			ratingAverage: result[0].avgRating,
 		});
 	} else {
@@ -37,7 +37,7 @@ reviewsSchema.statics.calcRatingAndQuantity = async function (productId) {
 };
 
 reviewsSchema.post<reviews>("save", async function () {
-	await (this.constructor as any).calcRatingAndQuantity(this.product);
+	await (this.constructor as any).calcRatingAndquantity(this.product);
 });
 
 reviewsSchema.pre<reviews>(/^find/, async function (next) {

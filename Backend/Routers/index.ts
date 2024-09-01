@@ -9,12 +9,14 @@ import usersRouter from "./Users";
 import authRouter from "./auth";
 import ReviewsRouter from "./Reviews";
 import wishlistRouter from "./WishList";
+import ordersRouter from "./Orders";
 
 const mountRoutes = (app: Application) => {
 	app.use("/api/v1/categories", CategoriesRouter);
 	app.use("/api/v1/subcategories", SubCategoriesRouter);
 	app.use("/api/v1/products", ProductsRouter);
 	app.use("/api/v1/reviews", ReviewsRouter);
+	app.use("/api/v1/orders", ordersRouter);
 	app.use("/api/v1/wishlist", wishlistRouter);
 	app.use("/api/v1/auth", authRouter);
 	app.use("/api/v1/users", usersRouter);

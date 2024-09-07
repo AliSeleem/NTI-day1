@@ -2,7 +2,6 @@ import ordersModel from "../Models/OrderModel";
 import { Order } from "../interfaces/Order";
 import { getAll, getOne } from "./refactorHandler";
 import { NextFunction, Request, Response } from "express";
-import { FilterData } from "../interfaces/filterData";
 import asyncHandler from "express-async-handler";
 import CartsModel from "../Models/CartsModel";
 import ApiError from "../utils/ApiError";

@@ -19,4 +19,4 @@ subCategoriesSchema.pre<SubCategories>(/^find/, function (next) {
 	next();
 });
 
-export default model("SubCategories", subCategoriesSchema);
+export default model("subcategories", subCategoriesSchema);

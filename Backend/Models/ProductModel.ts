@@ -27,7 +27,7 @@ const productSchema: Schema = new Schema<Product>(
 		subCategory: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: "subCategories",
+			ref: "subcategories",
 		},
 	},
 	{ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
@@ -60,7 +60,7 @@ productSchema.virtual("reviews", {
 
 productSchema.pre<Product>(/^find/, function (next) {
 	this.populate({ path: "category", select: "name" });
-	this.populate({ path: "subcategory", select: "name" });
+	this.populate({ path: "subCategory", select: "name" });
 	next();
 });
 

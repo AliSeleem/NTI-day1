@@ -1,0 +1,29 @@
+<div class="bg-black text-white container mt-4 d-flex justify-content-around align-items-center">
+  <div class="text-center m-3">
+    <h1>Best Seller Products</h1>
+  </div>
+  <img src="images/iPhone.svg" alt="iPhone">
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 column-gap-2  mx-auto container mt-4">
+  @if(products != []){
+    @for(product of products; track product._id){
+    <div class="card my-2 col">
+      <img [src]="imgDomain+product.cover" class="card-img-top w-100 h-50" [alt]="product.name">
+      <div class="card-body position-relative">
+        <h5 class="card-title">{{product.name}}</h5>
+        <p class="card-text">{{product.description|description:15}}</p>
+        <p class="card-text">price : {{product.price|currency}}</p>
+        <p class="card-text">{{product.ratingAverage}} &star; - count {{product.ratingCount}}</p>
+        <div class="position-absolute btn-card">
+          <a [routerLink]="['/products',product._id]" class="btn btn-primary mx-2">See More</a>
+          <button (click)="addToCart(product._id)" class="btn btn-success mx-2">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    }
+  }
+  @else {
+    <div class="text-success"><h1>Loadin.....</h1></div>
+  }
+</div>

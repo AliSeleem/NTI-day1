@@ -16,18 +16,22 @@ export const getAll = <modelType>(
 				filterData = req.filterData;
 			}
 
-			// Feature instantiation
+			// Features use
 			const apiFeatures: features = new features(
 				model.find(filterData),
 				req.query
-			);
-			// appling all methods but pagination
-			const data = apiFeatures.filter().sort().limitFields().search(modelName);
-			// calculating documents count
-			const docsNum = (await data.mongooseQuery).length;
+			)
+				.filter()
+				.sort()
+				.limitFields()
+				.search(modelName);
+			// Count documents
+			const docsNum = (await apiFeatures.mongooseQuery).length;
 			// Appling pagination
-			const { mongooseQuery, paginationResult } =
-				apiFeatures.pagination(docsNum);
+			const { mongooseQuery, paginationResult } = new features(
+				model.find(filterData),
+				req.query
+			).pagination(docsNum);
 			// Ectracting the docs
 			const docs: modelType[] = await mongooseQuery;
 			// sending response

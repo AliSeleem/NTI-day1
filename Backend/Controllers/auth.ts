@@ -71,7 +71,7 @@ export const allowedTo = (...roles: string[]) =>
 
 export const checkActive = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		if (req.user?.active) {
+		if (!req.user?.active) {
 			return next(new ApiError("your account is not active", 403));
 		}
 		next();

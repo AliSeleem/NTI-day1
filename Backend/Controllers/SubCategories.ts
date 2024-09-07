@@ -17,7 +17,7 @@ export const createSubCategory = createOne<SubCategories>(SubCategoriesModel);
 
 export const getSubCategories = getAll<SubCategories>(
 	SubCategoriesModel,
-	"categories"
+	"subcategories"
 );
 
 export const getSubCategory = getOne<SubCategories>(SubCategoriesModel);

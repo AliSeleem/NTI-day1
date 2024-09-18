@@ -40,8 +40,13 @@ reviewsSchema.post<reviews>("save", async function () {
 	await (this.constructor as any).calcRatingAndquantity(this.product);
 });
 
+reviewsSchema.pre<reviews>(/^find/, function (next) {
+	this.populate({ path: "user", select: "name image" });
+	next();
+});
+
 reviewsSchema.pre<reviews>(/^find/, async function (next) {
-	this.populate({ path: "user", select: "name imag" });
+	this.populate({ path: "product", select: "name cover" });
 	next();
 });
 

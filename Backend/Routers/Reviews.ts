@@ -3,17 +3,18 @@ import {
 	createReview,
 	deleteReview,
 	filterReviews,
+	getReview,
 	getReviews,
 	setProductAndUserId,
+	updateReview,
 } from "../Controllers/Reviews";
 import { allowedTo, checkActive, protectRoutes } from "../Controllers/auth";
 import {
 	createReviewValidator,
 	deleteReviewValidator,
 	getReviewValidator,
+	updateReviewValidator,
 } from "../utils/validation/reviewsValidator";
-import { updateCategoryValidator } from "../utils/validation/categoriesValidator";
-import { updateCategory } from "../Controllers/Categories";
 
 const ReviewsRouter: Router = Router({ mergeParams: true });
 
@@ -28,14 +29,22 @@ ReviewsRouter.route("/")
 		createReview
 	);
 
+ReviewsRouter.route("/myReviews").get(
+	protectRoutes,
+	checkActive,
+	allowedTo("user"),
+	filterReviews,
+	getReviews
+);
+
 ReviewsRouter.route("/:id")
-	.get(getReviewValidator, getReviews)
+	.get(getReviewValidator, getReview)
 	.put(
 		protectRoutes,
 		checkActive,
 		allowedTo("user"),
-		updateCategoryValidator,
-		updateCategory
+		updateReviewValidator,
+		updateReview
 	)
 	.delete(
 		protectRoutes,

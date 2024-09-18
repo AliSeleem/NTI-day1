@@ -15,7 +15,10 @@ import {
 	updateProductValidator,
 } from "../utils/validation/productsValidator";
 import { allowedTo, checkActive, protectRoutes } from "../Controllers/auth";
+import ReviewsRouter from "./Reviews";
 const ProductsRouter = express.Router();
+
+ProductsRouter.use("/:productId/reviews", ReviewsRouter);
 
 ProductsRouter.route("/")
 	.get(getProducts)
@@ -28,6 +31,7 @@ ProductsRouter.route("/")
 		createProductValidator,
 		createProduct
 	);
+
 ProductsRouter.route("/:id")
 	.get(getProductValidator, getProduct)
 	.put(

@@ -1,39 +1,87 @@
-<div class="bg-black text-white container mt-4 d-flex justify-content-around align-items-center">
-  <div class="text-center m-3">
-    <h1>All Products</h1>
+<!-- Hero section -->
+<div id="hero" class="bg-black text-white container mt-4 d-flex justify-content-around align-items-center" style="background-image: url(images/hero-market.avif); background-repeat: no-repeat; background-size: cover; background-position: center;">
+  <div class="text-center m-5">
+    <h1>All your needs in one <span style="text-decoration: underline; color: #FFD43B;">WEBSITE</span></h1>
   </div>
-  <img src="images/iPhone.svg" alt="iPhone">
 </div>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mx-auto container mt-4">
-  @for(product of products; track product._id){
-  <div class="card col">
-    <img [src]="imgDomain+product.cover" class="card-img-top w-100 h-50" [alt]="product.name">
-    <div class="card-body">
-      <h5 class="card-title">{{product.name}}</h5>
-      <p class="card-text">{{product.description|description:15}}</p>
-      <p class="card-text">price : {{product.price|currency}}</p>
-      <p class="card-text">{{product.ratingAverage}} &star; - count {{product.ratingCount}}</p>
-      <div class="btn-card d-flex flex-row ">
-        <button [routerLink]="['/products',product._id]" class="btn btn-primary mx-2">See More</button>
-        <button (click)="addProductToCart(product._id)" class="btn btn-success mx-2">Add to Cart</button>
-      </div>
-    </div>
+<!-- Search filter -->
+<div class="container my-3 text-center ">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" #searchInput placeholder="Product Name" aria-label="search" aria-describedby="button-addon2">
+    <button class="btn btn-outline-secondary" (click)="setSearch(searchInput.value)" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
   </div>
+</div>
+
+<!-- Categories filter -->
+<div class="d-flex justify-content-center align-content-center nav-fill overflow-x-auto container mx-auto mt-2">
+  @for(cat of categoris; track cat._id){
+    <div class="btn border border-primary mx-2" (click)="setCategory(cat._id)" [class.btn-primary]="cat._id === this.category">{{cat.name}}</div>
   }
 </div>
 
-<div class="m-auto w-100">
-  <ul class="pagination">
-    @if(pagination.prev){<li (click)="changePage(pagination.prev)" class="page-item"><button
-        class="page-link">Previous</button></li>}
-    @if(pagination.currentPage!==1)
-    {<li (click)="changePage(1)" class="page-item"><button class="page-link">1</button></li>}
-    <li class="page-item"><button class="page-link">{{pagination.currentPage}}</button></li>
-    @if(pagination.currentPage!==pagination.totalPages)
-    {<li (click)="changePage(pagination.totalPages!)" class="page-item"><button
-        class="page-link">{{pagination.totalPages}}</button></li>}
-    @if(pagination.next){<li (click)="changePage(pagination.next)" class="page-item"><button
-        class="page-link">Next</button></li>}
-  </ul>
+<!-- SubCategories filter -->
+<div class="d-flex justify-content-center container mx-auto mt-2">
+  @for(sub of subCategoris; track sub._id){
+    <div class="btn mx-2  border border-danger" (click)="setSubCategory(sub._id)" [class.btn-danger]="sub._id === this.subCategory">{{sub.name}}</div>
+  }
+</div>
+
+<!-- Productes -->
+<div class="container mt-4">
+  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+    @for(product of products; track product._id) {
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <img [src]="imgDomain + product.cover" class="card-img-top" [alt]="product.name">
+          <div class="card-body">
+            <h5 class="card-title text-truncate">{{product.name}}</h5>
+            <p class="card-text">
+              <span class="fw-bold">{{product.ratingAverage| number:'1.1-1'}}</span>
+              <i class="fa-sharp fa-solid fa-star" style="color: #FFD43B;"></i>
+              <small>({{ product.ratingCount }} reviews)</small>
+            </p>
+            <p class="card-text text-muted">{{product.description | description: 15}}</p>
+            <p class="card-text fw-bold">Price: {{product.price | currency}}</p>
+          </div>
+          <div class="card-footer bg-white">
+            <div class="d-flex justify-content-between">
+              <button [routerLink]="['/products',product._id]" class="btn btn-outline-primary">Details</button>
+              <button [disabled]="!isLogin" (click)="addProductToCart(product._id)" class="btn btn-success">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Pagination -->
+@if(products.length){
+  <div class="container mt-5">
+    <ul class="pagination justify-content-center">
+      @if(pagination.prev){
+        <li (click)="changePage(pagination.prev)" class="page-item">
+          <button class="page-link">Previous</button>
+        </li>}
+      @if(pagination.currentPage!==1)
+      {<li (click)="changePage(1)" class="page-item"><button class="page-link">1</button></li>}
+      <li class="page-item"><button class="page-link">{{pagination.currentPage}}</button></li>
+      @if(pagination.currentPage!==pagination.totalPages)
+      {<li (click)="changePage(pagination.totalPages!)" class="page-item"><button
+          class="page-link">{{pagination.totalPages}}</button></li>}
+      @if(pagination.next){<li (click)="changePage(pagination.next)" class="page-item"><button
+          class="page-link">Next</button></li>}
+    </ul>
+  </div>
+}
+
+<!-- Status -->
+@if (status) {
+  <div class="text-secondary text-center"><h3>{{status}}</h3></div>
+}
+
+<!-- State -->
+<div class="state" [class.disable]="this.state === '' ">
+  {{this.state}}
 </div>

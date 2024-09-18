@@ -1,0 +1,80 @@
+<div class="container text-center">
+  <h1 class="mx-auto my-5">Orders</h1>
+  @if (status) {
+    <h4>{{this.status}}</h4>
+  } @else {
+    <table class="table align-middle ">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Oreder Id</th>
+        <th scope="col">Total price</th>
+        <th scope="col">Delivered</th>
+        <th scope="col">Paid</th>
+        <th scope="col">Paid by</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider justify-content-center ">
+      @for (order of orders; track order._id) {
+        <tr>
+          <th scope="row">{{order.createdAt|date}}</th>
+          <td scope="row">{{order._id}}</td>
+          <td>{{order.totalPrice|currency}}</td>
+          <td>{{order.isDelivered}}</td>
+          <td>{{order.isPaid}}</td>
+          <td>{{order.paymentMethod}}</td>
+          <td><button (click)="this.details = order" class="btn btn-primary">Details</button></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>
+
+@if (!isObjectEmpty(this.details)) {
+  <div class="container text-center bg-secondary details text-white bg-black">
+    <a (click)="this.details = {}" class="text-muted"><i class="fas fa-times"></i></a>
+    <h1>Order details</h1>
+    <div class="d-flex justify-content-between">
+      <p>Created At:</p>
+      <p>{{details.createdAt}}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Paid:</p>
+      <p>{{details.isPaid? 'Yes' : 'No'}}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Delivered:</p>
+      <p>{{details.isDelivered? 'Yes' : 'No'}}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <p>Address:</p>
+      <p>{{details.address}}</p>
+    </div>
+    <h3>Oreder products</h3>
+    <table class="table align-middle text-center">
+      <thead>
+        <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Subcategory</th>
+          <th scope="col">Unit Price</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider justify-content-center overflow-y-scroll">
+        @for (prod of details.cartItems; track prod._id) {
+          <td scope="row">
+            <div class="d-flex gap-2" >
+              <img [src]="productImage+prod.product?.cover" [alt]="prod.name" style="height: 2em; width: 1.7em; object-fit: cover;">
+              <p>{{prod.product.name}}</p>
+            </div>
+          </td>
+          <td>{{prod.product.category?.name}}</td>
+          <td>{{prod.product.subCategory?.name}}</td>
+          <td>{{prod.price|currency}}</td>
+        }
+      </tbody>
+    </table>
+  </div>
+}

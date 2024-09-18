@@ -22,8 +22,6 @@ export const getAll = <modelType>(
 				req.query
 			)
 				.filter()
-				.sort()
-				.limitFields()
 				.search(modelName);
 			// Count documents
 			const docsNum = (await apiFeatures.mongooseQuery).length;
@@ -31,7 +29,12 @@ export const getAll = <modelType>(
 			const { mongooseQuery, paginationResult } = new features(
 				model.find(filterData),
 				req.query
-			).pagination(docsNum);
+			)
+				.filter()
+				.sort()
+				.limitFields()
+				.search(modelName)
+				.pagination(docsNum);
 			// Ectracting the docs
 			const docs: modelType[] = await mongooseQuery;
 			// sending response
@@ -49,7 +52,7 @@ export const getOne = <modeltype>(
 ) =>
 	asyncHandler(
 		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let query = await model.findById(req.params.id);
+			let query = model.findById(req.params.id);
 			if (population) {
 				query = query.populate(population);
 			}

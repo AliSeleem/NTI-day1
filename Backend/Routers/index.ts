@@ -11,6 +11,7 @@ import ReviewsRouter from "./Reviews";
 import wishlistRouter from "./WishList";
 import ordersRouter from "./Orders";
 import CartsRouter from "./Carts";
+import CouponRouter from "./Coupons";
 
 const mountRoutes = (app: Application) => {
 	app.use("/api/v1/categories", CategoriesRouter);
@@ -19,6 +20,7 @@ const mountRoutes = (app: Application) => {
 	app.use("/api/v1/reviews", ReviewsRouter);
 	app.use("/api/v1/orders", ordersRouter);
 	app.use("/api/v1/wishlist", wishlistRouter);
+	app.use("/api/v1/coupons", CouponRouter);
 	app.use("/api/v1/carts", CartsRouter);
 	app.use("/api/v1/auth", authRouter);
 	app.use("/api/v1/users", usersRouter);

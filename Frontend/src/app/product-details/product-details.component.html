@@ -1,66 +1,131 @@
-<div class="container my-5">
+@if (isObjectEmpty(product)) {
+  <h2 class="text-center my-5">Loading...</h2>
+} @else {
+  <div class="container my-5">
   <div class="row">
+    <!-- Product Image Section -->
     <div class="col-md-5">
       <div class="main-img">
-        <img class="img-fluid" [src]="imgDomain+product?.cover" [alt]="product.name">
+        <img class="img-fluid w-100 rounded shadow" [src]="imgDomain + product?.cover" [alt]="product.name">
         <div class="row my-3 previews">
-          @for(image of product?.images; track image){
-          <div class="col-md-3 my-1">
-            <img class="w-100" [src]="imgDomain+image" [alt]="product.name">
+          @for(image of product?.images; track image) {
+          <div class="col-3 my-1">
+            <img class="w-100 rounded shadow-sm" [src]="imgDomain + image" [alt]="product.name">
           </div>
           }
         </div>
       </div>
     </div>
 
+    <!-- Product Details Section -->
     <div class="col-md-7">
       <div class="main-description px-2">
-        <div class="category text-bold">{{product?.subcategory?.name}}</div>
-        <div class="product-title text-bold my-3">{{product?.name}}</div>
+        <div class="category fw-bold text-uppercase text-secondary">{{ product?.subcategory?.name }}</div>
+        <h2 class="product-title fw-bold my-3">{{ product?.name }}</h2>
+
         <div class="price-area my-4">
-          <!-- <p class="old-price mb-1"><del>$100</del> <span class="old-price-discount text-danger">(20% off)</span></p> -->
-          <p class="new-price text-bold mb-1">{{product?.price|currency}}</p>
-          <p class="text-secondary mb-1">(Additional tax may apply on checkout)</p>
-          <p class="new-price text-bold mb-1">{{product?.ratingAverage}} &star;</p>
+          <p class="new-price fw-bold mb-1">{{ product?.price | currency }}</p>
+          <p class="text-secondary mb-1">(Additional tax may apply at checkout)</p>
+          <p class="fw-bold mb-1">{{ product?.ratingAverage| number:'1.1-1' }} &star;</p>
         </div>
 
-        <div class="buttons d-flex my-5">
-          <div class="block">
-            <button (click)="addToWishlist(product._id)" class="shadow btn btn btn-primary ">Add to Wishlist</button>
-          </div>
-          <div class="block">
-            <button (click)="addToCart(product._id)" class="shadow btn btn btn-success">Add to cart</button>
-          </div>
+        <div class="buttons d-flex my-4 gap-3">
+          <button [disabled]="!isLogin" (click)="addToWishlist(product._id)" class="btn btn-primary shadow-sm">
+            Add to Wishlist
+          </button>
+          <button [disabled]="!isLogin" (click)="addToCart(product._id)" class="btn btn-success shadow-sm">
+            Add to Cart
+          </button>
         </div>
-
       </div>
 
+      <!-- Product Details Section -->
       <div class="product-details my-4">
-        <p class="details-title text-color mb-1">Product Details</p>
-        <p class="description">{{product?.description}}</p>
+        <h4 class="details-title text-color fw-bold mb-2">Product Details</h4>
+        <p class="description">{{ product?.description }}</p>
       </div>
 
-      <div class="row questions bg-light p-3">
-        <div class="col-md-1 icon">
-          <i class="fa-brands fa-rocketchat questions-icon"></i>
+      <!-- Questions Section -->
+      <div class="row bg-light p-3 my-4 rounded">
+        <div class="col-md-1">
+          <i class="fa-brands fa-rocketchat questions-icon fs-3 text-primary"></i>
         </div>
-        <div class="col-md-11 text">
-          Have a question about our products at E-Store? Feel free to contact our representatives via live chat or
-          email.
+        <div class="col-md-11">
+          Have a question about our products? Feel free to contact our representatives via live chat or email.
         </div>
       </div>
 
+      <!-- Delivery Section -->
       <div class="delivery my-4">
-        <p class="font-weight-bold mb-0"><span><i class="fa-solid fa-truck"></i></span> <b>Delivery done in 3 days from
-            date of purchase</b> </p>
-        <p class="text-secondary">Order now to get this product delivery</p>
+        <p class="fw-bold mb-0">
+          <i class="fa-solid fa-truck me-2"></i>
+          Delivery done in 3 days from date of purchase
+        </p>
+        <p class="text-secondary">Order now to get this product delivered.</p>
       </div>
 
+      <!-- Delivery Options -->
       <div class="delivery-options my-4">
-        <p class="font-weight-bold mb-0"><span><i class="fa-solid fa-filter"></i></span> <b>Delivery options</b> </p>
-        <p class="text-secondary">View delivery options here</p>
+        <p class="fw-bold mb-0">
+          <i class="fa-solid fa-filter me-2"></i>
+          Delivery options
+        </p>
+        <p class="text-secondary">View delivery options here.</p>
       </div>
-
     </div>
   </div>
+
+  <!-- Review Section -->
+  <hr class="my-5">
+  <div class="reviews-section">
+    <form [formGroup]="reviewForm" (ngSubmit)="addReview(product._id, reviewForm)">
+      <div class="form-floating mb-3">
+        <textarea class="form-control" formControlName="comment" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+        <label for="floatingTextarea">Review</label>
+      </div>
+      <div class="text-danger">
+        @if(reviewError !== '') {
+        <label for="">{{ reviewError }}</label>
+        }
+      </div>
+      <div class="rating mb-3 d-flex align-items-center gap-2 flex-row-reverse justify-content-end">
+        <input type="radio" formControlName="rating" id="star5" name="rating" value="5" />
+        <label class="star" for="star5" title="Awesome"></label>
+        <input type="radio" formControlName="rating" id="star4" name="rating" value="4" />
+        <label class="star" for="star4" title="Great"></label>
+        <input type="radio" formControlName="rating" id="star3" name="rating" value="3" />
+        <label class="star" for="star3" title="Very Good"></label>
+        <input type="radio" formControlName="rating" id="star2" name="rating" value="2" />
+        <label class="star" for="star2" title="Good"></label>
+        <input type="radio" formControlName="rating" id="star1" name="rating" value="1" />
+        <label class="star" for="star1" title="Bad"></label>
+        <button class="btn btn-success shadow mt-2">Add Review</button>
+      </div>
+    </form>
+
+    <!-- Reviews Display -->
+    <div class="reviews-container my-5">
+      <hr>
+      <h2 class="text-center">Product Reviews</h2>
+      <hr>
+      @for(review of product?.reviews; track review._id) {
+      <div class="mx-auto w-75 mb-4">
+        <div class="d-flex justify-content-between">
+          <h5>{{ review?.user?.name }}</h5>
+          <p>{{ review?.createdAt | date }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+          <p>{{ review?.comment }}</p>
+          <p>{{ review?.rating }}&star;</p>
+        </div>
+        <hr>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<div class="state" [class.disable]="this.state === '' ">
+  {{this.state}}
 </div>

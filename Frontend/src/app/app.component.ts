@@ -10,6 +10,4 @@ import { FooterComponent } from './footer/footer.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'Frontend';
-}
+export class AppComponent {}

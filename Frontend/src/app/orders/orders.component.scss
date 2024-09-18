@@ -1,0 +1,22 @@
+.details{
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  padding: 20px 40px;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+  max-height: 70%;
+
+  a{
+    position: fixed;
+    top: 25px;
+    right: 50px;
+    scale: 1.5;
+    color: red;
+    cursor: pointer;
+  }
+}

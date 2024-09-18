@@ -18,6 +18,6 @@ authRouter.route("/signup").post(signupValidator, signup);
 authRouter.route("/login").post(loginValidator, login);
 authRouter.route("/forgetPassword").post(sendMailValidator, forgetPassword);
 authRouter.route("/verifyCode").post(verifyResetCode);
-authRouter.route("/resetCode").post(resetCodeValidator, resetCode);
+authRouter.route("/resetCode").put(resetCodeValidator, resetCode);
 
 export default authRouter;

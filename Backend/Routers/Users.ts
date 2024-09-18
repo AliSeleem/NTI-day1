@@ -10,6 +10,7 @@ import {
 	changeUserPassword,
 	setLoggedUserId,
 	changeLoggedUserPassword,
+	updateLoggedUser,
 } from "../Controllers/Users";
 import {
 	createUserValidator,
@@ -29,7 +30,13 @@ usersRouter.use(protectRoutes, checkActive);
 // user operations
 usersRouter.get("/me", setLoggedUserId, getUser);
 
-usersRouter.put("/updatMe", updateLoggedUserValidator, getUser);
+usersRouter.put(
+	"/updateMe",
+	uploadUserImage,
+	resizeUserImage,
+	updateLoggedUserValidator,
+	updateLoggedUser
+);
 
 usersRouter.put(
 	"/changeMyPassword",

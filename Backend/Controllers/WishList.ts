@@ -18,16 +18,14 @@ export const appProductToWishList = asyncHandler(
 
 export const removeProductFromWishList = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const user = await usersModel.findById(req.user?._id);
-		if (!user) {
-			res.status(404).json({ message: "User not found" });
-		} else if (!user.wishlist.includes(req.body.product)) {
-			res.status(404).json({ message: "product not found" });
-		} else {
-			user.wishlist = user.wishlist.filter((prod) => prod !== req.body.product);
-			await user.save({ validateModifiedOnly: true });
-			res.status(200).json({ data: user?.wishlist });
-		}
+		const user = await usersModel.findByIdAndUpdate(
+			req.user?._id,
+			{
+				$pull: { wishlist: req.params.product },
+			},
+			{ new: true }
+		);
+		res.status(200).json({ data: user?.wishlist });
 	}
 );
 

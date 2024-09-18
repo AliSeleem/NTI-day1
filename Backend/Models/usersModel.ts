@@ -7,7 +7,7 @@ const usersSchema: Schema = new Schema<Users>(
 		name: { type: String, required: true, trim: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true, minlength: 8, maxlength: 20 },
-		image: String,
+		image: { type: String, default: "user-default.jpeg" },
 		role: {
 			type: String,
 			required: true,

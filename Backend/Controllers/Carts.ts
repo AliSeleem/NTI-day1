@@ -29,23 +29,24 @@ export const addProductToCart = asyncHandler(
 		if (!cart) {
 			cart = await cartsModel.create({
 				user: req.user?._id,
-				cartItems: [{ product: req.body.product._id, price: product.price }],
+				cartItems: [{ product: req.body.product, price: product.price }],
 			});
 		} else {
 			const productIndex = cart.cartItems.findIndex(
-				(item) => item.product.toString() === req.body.product._id.toString()
+				(item: CartProducts) =>
+					item.product._id?.toString() === req.body.product.toString()
 			);
-			if (productIndex >= 0) {
+			if (productIndex > -1) {
 				cart.cartItems[productIndex].quantity += 1;
 			} else {
 				cart.cartItems.push({
-					product: req.body.product._id,
+					product: req.body.product,
 					price: product.price,
 					quantity: 1,
 				});
 			}
 		}
-		calcTotalPrice(cart);
+		cart.totalPrice = calcTotalPrice(cart);
 		await cart.save();
 		res.status(200).json({ length: cart.cartItems.length, data: cart });
 	}
@@ -54,18 +55,22 @@ export const addProductToCart = asyncHandler(
 // Remove Product from cart
 export const removeProductFromCart = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const cart: any = await cartsModel.findOneAndUpdate(
-			{ user: req.user?._id },
-			{
-				$pull: {
-					cartItems: { product: req.body.product._id },
+		try {
+			const cart: any = await cartsModel.findOneAndUpdate(
+				{ user: req.user?._id },
+				{
+					$pull: {
+						cartItems: { _id: req.params.itemId },
+					},
 				},
-			},
-			{ new: true }
-		);
-		calcTotalPrice(cart);
-		await cart.save();
-		res.status(200).json({ length: cart.cartItems.length, data: cart });
+				{ new: true }
+			);
+			cart.totalPrice = calcTotalPrice(cart);
+			await cart.save();
+			res.status(200).json({ length: cart.cartItems.length, data: cart });
+		} catch (error) {
+			res.status(400).json({ error: error });
+		}
 	}
 );
 
@@ -77,14 +82,15 @@ export const updateProductQuantity = asyncHandler(
 			return next(new ApiError("cart not found", 404));
 		}
 		const productIndex = cart.cartItems.findIndex(
-			(item) => item.product.toString() === req.body.product._id.toString()
+			(item) =>
+				item.product._id?.toString() === req.body.product._id?.toString()
 		);
 		if (productIndex >= 0) {
 			cart.cartItems[productIndex].quantity = req.body.quantity;
 		} else {
 			return next(new ApiError("Product not found in cart", 404));
 		}
-		calcTotalPrice(cart);
+		cart.totalPrice = calcTotalPrice(cart);
 		await cart.save();
 		res.status(200).json({ length: cart.cartItems.length, data: cart });
 	}

@@ -19,6 +19,9 @@ export const filterReviews = (
 	if (req.params.productId) {
 		filterData.product = req.params.productId;
 	}
+	if (req.user?.role === "user" && !req.params.productId) {
+		filterData.user = req.user._id;
+	}
 	req.filterData = filterData;
 	next();
 };

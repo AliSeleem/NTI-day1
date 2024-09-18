@@ -12,6 +12,6 @@ wishlistRouter.use(protectRoutes, allowedTo("user"), checkActive);
 
 wishlistRouter.route("/").get(getLoggedUserWishList).post(appProductToWishList);
 
-wishlistRouter.route(":product").delete(removeProductFromWishList);
+wishlistRouter.route("/:product").delete(removeProductFromWishList);
 
 export default wishlistRouter;

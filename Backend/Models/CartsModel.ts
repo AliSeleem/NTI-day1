@@ -10,8 +10,8 @@ const CartsSchema: Schema = new Schema<Cart>(
 				price: Number,
 			},
 		],
-		totalPrice: { type: Number, required: true },
-		totalPriceAfterDiscount: { type: Number, required: true },
+		totalPrice: Number,
+		totalPriceAfterDiscount: Number,
 		user: { type: Schema.Types.ObjectId, ref: "users" },
 	},
 	{ timestamps: true }

@@ -1,0 +1,40 @@
+<div class="container text-center">
+  <h1 class="mx-auto my-5">Wishlist</h1>
+  @if (status) {
+    <h4>{{this.status}}</h4>
+  } @else {
+    <table class="table align-middle ">
+    <thead>
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Category</th>
+        <th scope="col">Subcategory</th>
+        <th scope="col">Unit Price</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider justify-content-center ">
+      @for (prod of wishlist; track prod._id) {
+        <tr>
+          <th scope="row">
+            <div class="d-flex gap-2" >
+              <img [src]="productImage+prod?.cover" [alt]="prod.name" style="height: 2em; width: 1.7em; object-fit: cover;">
+              <p>{{prod.name}}</p>
+            </div>
+          </th>
+          <td>{{prod.category?.name}}</td>
+          <td>{{prod.subCategory?.name}}</td>
+          <td>{{prod.price|currency}}</td>
+          <td><button (click)="addProductToCart(prod._id)" class="btn btn-primary">add to cart</button></td>
+          <td><button (click)="remiveItem(prod._id)" class="nav-link "><i class="far fa-trash-alt"></i></button></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>
+
+<div class="state" [class.disable]="this.state === '' ">
+  {{this.state}}
+</div>

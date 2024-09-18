@@ -98,7 +98,6 @@ export const forgetPassword = asyncHandler(
 			await sendMail({ email: user.email, subject: "reset password", message });
 			await user.save({ validateModifiedOnly: true });
 		} catch (error) {
-			console.error(error);
 			return next(new ApiError("error sending email", 500));
 		}
 		const resetToken = createResetToken(user._id);
@@ -111,7 +110,7 @@ export const verifyResetCode = asyncHandler(
 		let resetToken: string = "";
 		if (
 			req.headers.authorization &&
-			req.headers.authorization.startsWith("bearer")
+			req.headers.authorization.startsWith("Bearer")
 		) {
 			resetToken = req.headers.authorization.split(" ")[1];
 		} else {
@@ -126,7 +125,7 @@ export const verifyResetCode = asyncHandler(
 			.update(req.body.resetCode)
 			.digest("hex");
 		const user = await usersModel.findOne({
-			_id: decodedToken.id,
+			_id: decodedToken._id,
 			resetCode: hashedResetcCode,
 			resetCodeExpireTime: { $gt: Date.now() },
 		});

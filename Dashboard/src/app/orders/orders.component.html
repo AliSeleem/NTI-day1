@@ -1,0 +1,118 @@
+<div class="w-75 m-auto">
+  <!-- Header Section -->
+  <h2 class="text-center my-5">All Orders</h2>
+  <hr class="my-3">
+
+  <!-- Controls (Search) -->
+  <div class="d-flex justify-content-between mb-3">
+    <input (change)="searchData(searchInput.value)" #searchInput class="form-control w-25" type="search" placeholder="Search" aria-label="Search">
+  </div>
+
+  <hr class="my-3">
+
+  <!-- Orders Table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>User</th>
+        <th>Payment</th>
+        <th>Delivered</th>
+        <th>Paid</th>
+        <th>Total Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(order of orders; track order._id) {
+      <tr>
+        <td>{{$index + 1}}</td>
+        <td>{{order?._id | slice:-4}}</td>
+        <td>{{order?.user?.name}}</td>
+        <td>{{order?.paymentMethod}}</td>
+        <td>@if(order?.isDelivered){Yes} @else {No}</td>
+        <td>@if(order?.isPaid){Yes} @else {No}</td>
+        <td>{{order?.totalPrice | currency}}</td>
+        <td>
+          <!-- Trigger Button to Open the Modal -->
+          <button type="button" (click)="this.selectedOrder = order" class="btn btn-primary btn-sm rounded-3 mx-1" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+            Details
+          </button>
+          <!-- Update Delivered Button -->
+          <button [disabled]="order.isDelivered" (click)="updateDelivered(order._id)" class="btn btn-success btn-sm rounded-3 mx-1">
+            Deliver Order
+          </button>
+          <!-- Update Paid Button -->
+          <button [disabled]="order.isPaid" (click)="updatePaid(order._id)" class="btn btn-warning btn-sm rounded-3 mx-1">
+            Pay Order
+          </button>
+        </td>
+      </tr>
+      }
+      @empty { <tr><td colspan="8" class="text-center"><h3>No orders found</h3></td></tr> }
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Section -->
+<div class="container m-auto mt-5 w-25">
+  <ul class="pagination justify-content-center">
+    @if(pagination?.prev) {
+      <li (click)="changePage(pagination.prev)" class="page-item">
+        <button class="page-link">Previous</button>
+      </li>
+    }
+    @if(pagination?.currentPage !== 1) {
+      <li (click)="changePage(1)" class="page-item">
+        <button class="page-link">1</button>
+      </li>
+    }
+    <li class="page-item active"><button class="page-link">{{pagination?.currentPage}}</button></li>
+    @if(pagination?.currentPage !== pagination?.totalPages) {
+      <li (click)="changePage(pagination.totalPages!)" class="page-item">
+        <button class="page-link">{{pagination.totalPages}}</button>
+      </li>
+    }
+    @if(pagination?.next) {
+      <li (click)="changePage(pagination.next)" class="page-item">
+        <button class="page-link">Next</button>
+      </li>
+    }
+  </ul>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="selectedOrder">
+          <p><strong>ID:</strong> {{selectedOrder._id}}</p>
+          <p><strong>User:</strong> {{selectedOrder.user.name}}</p>
+          <p><strong>Products:</strong></p>
+          <ul>
+            @for(item of selectedOrder.cartItems; track item._id) {
+            <li>
+              <img class="mx-2" width="50px" [src]="productsImage + item.product.cover" [alt]="item.product.name">
+              {{item.product.name}} - {{item.quantity}}
+            </li>
+            }
+          </ul>
+          <p><strong>Payment Method:</strong> {{selectedOrder.paymentMethod}}</p>
+          <p><strong>Delivered:</strong> @if(selectedOrder.isDelivered){Yes} @else {No}</p>
+          <p><strong>Delivery Time:</strong> @if(selectedOrder.deliveredAt){{{selectedOrder.deliveredAt | date}}} @else {-----}</p>
+          <p><strong>Paid:</strong> @if(selectedOrder.isPaid){Yes} @else {No}</p>
+          <p><strong>Pay Time:</strong> @if(selectedOrder.paidAt){{{selectedOrder.paidAt | date}}} @else {-----}</p>
+          <p><strong>Tax Price:</strong> {{selectedOrder.taxPrice | currency}}</p>
+          <p><strong>Total Price:</strong> {{selectedOrder.totalPrice | currency}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="d-flex flex-column justify-content-between bg-secondary vh-100 p-3" [class.d-none]="!display" style="width: 250px;">
+    <div>
+      <!-- Sidebar Header -->
+      <div class="d-flex align-items-center mb-4">
+        <img src="market.png" style="height: 2em; margin-right: 1em;">
+        <a class="navbar-brand text-white">EL BEQALAH</a>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav flex-column nav-pills w-100">
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/categories" routerLinkActive="active">Categories</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/subCategories" routerLinkActive="active">Subcategories</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/products" routerLinkActive="active">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/coupons" routerLinkActive="active">Coupons</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/orders" routerLinkActive="active">Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/users" routerLinkActive="active">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-center text-white" routerLink="/layout/profile" routerLinkActive="active">Profile</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Logout Button at the Bottom -->
+    <div>
+      <a class="nav-link text-center text-white bg-danger mt-3" routerLink="/logout">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-grow-1 position-relative">
+    <!-- Toggle Button -->
+    <div class="position-absolute top-0 start-0 p-2">
+      <button (click)="this.display = !this.display" class="btn btn-primary"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid p-4 overflow-auto" style="height: 100vh;">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -88,7 +88,7 @@ export const updateOne = <modeltype>(model: mongoose.Model<any>) =>
 export const deleteOne = <modeltype>(model: mongoose.Model<any>) =>
 	asyncHandler(
 		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const doc = await model.findByIdAndDelete(req.params.id);
+			const doc = await model.findOneAndDelete({ _id: req.params.id });
 			if (!doc) {
 				return next(new ApiError("Document Not found", 404));
 			}

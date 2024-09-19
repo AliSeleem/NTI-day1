@@ -1,0 +1,18 @@
+#sidebarMenu {
+  width: 250px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1000;
+  padding: 48px 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  cursor: pointer;
+}

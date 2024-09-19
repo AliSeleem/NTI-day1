@@ -62,7 +62,7 @@ export const createProductValidator: RequestHandler[] = [
 			}
 			return true;
 		}),
-	check("subcategory")
+	check("subCategory")
 		.notEmpty()
 		.withMessage("subcategory is Required")
 		.isMongoId()

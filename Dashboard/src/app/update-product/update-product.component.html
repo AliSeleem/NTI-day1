@@ -1,0 +1,63 @@
+<div class="w-50 mt-5 m-auto shadow p-4">
+  <h1 class="text-center">Update Product</h1>
+  <form [formGroup]="productForm" (ngSubmit)="updateProduct(product._id, productForm)">
+    <!-- Product Name -->
+    <div class="p-3">
+      <input formControlName="name" class="form-control" type="text" placeholder="Product Name" [value]="product?.name">
+    </div>
+
+    <!-- Description -->
+    <div class="form-floating p-3">
+      <textarea formControlName="description" class="form-control" placeholder="Description" [value]="product?.description"></textarea>
+      <label for="floatingTextarea">Description</label>
+    </div>
+
+    <!-- Category -->
+    <div class="p-3">
+      <select formControlName="category" class="form-select" (change)="loadSubcategories(cate.value)" #cate>
+        <option disabled value="ccccc">Choose Category</option>
+        @for (category of categories; track category._id) {
+          <option [value]="category?._id" [selected]="category._id === product?.category?._id">
+            {{ category.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Subcategory -->
+    <div class="p-3">
+      <select formControlName="subcategory" class="form-select">
+        <option disabled>Choose Subcategory</option>
+        @for(subcategory of subcategories; track subcategory._id){
+          <option [value]="subcategory._id" [selected]="subcategory._id === product?.subcategory?._id">
+            {{ subcategory.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Price and Quantity -->
+    <div class="p-3 d-flex justify-content-around">
+      <input formControlName="price" class="form-control w-25" type="number" placeholder="Product Price" [value]="product?.price">
+      <input formControlName="quantity" class="form-control w-25" type="number" placeholder="Product Quantity" [value]="product?.quantity">
+    </div>
+
+    <!-- Product Images -->
+    <div class="p-3 d-flex justify-content-around">
+      <div class="w-25">
+        <label class="mb-2">Product Cover</label>
+        <input type="file" accept="image/*" class="form-control">
+      </div>
+      <div class="w-25">
+        <label class="mb-2">Additional Images</label>
+        <input type="file" accept="image/*" class="form-control" multiple>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-3">
+      <button [disabled]="productForm.invalid" class="btn btn-primary mx-3" type="submit">Update</button>
+      <a routerLink="/layout/products" class="btn btn-danger">Cancel</a>
+    </div>
+  </form>
+</div>

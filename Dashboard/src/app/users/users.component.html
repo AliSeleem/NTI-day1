@@ -1,0 +1,129 @@
+<div class="w-75 m-auto">
+  <h2 class="text-center my-5">All Users</h2>
+  <hr class="my-3">
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-primary" routerLink="create">Create User</a>
+    <button (click)="filterUsers('admin')" class="btn btn-success btn-sm rounded-3">View Admins</button>
+    <button (click)="filterUsers('user')" class="btn btn-success btn-sm rounded-3">View Users</button>
+    <input (change)="searchData(searchInput.value)" #searchInput class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search">
+  </div>
+  <hr class="my-3">
+  <table class="w-100">
+    <thead>
+      <tr class="border-bottom">
+        <th>#</th>
+        <th>ID</th>
+        <th>User Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Active</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(user of users; track user._id) {
+      <tr class="m-5 border-bottom">
+        <td>{{$index + 1}}</td>
+        <td>{{user?._id | slice:-4}}</td>
+        <td><img class="mx-3" width="50px" [src]="userImage + user?.image" [alt]="user?.name">{{user?.name}}</td>
+        <td>{{user?.email}}</td>
+        <td>{{user?.role}}</td>
+        <td>@if(user?.active) {Yes} @else {No}</td>
+        <td>
+          <button type="button" (click)="this.selectedUser = user" class="btn btn-primary btn-sm my-3 rounded-3 mx-3" data-bs-toggle="modal" data-bs-target="#userDetailsModal">
+            Details
+          </button>
+          <button (click)="changeUserActive(user._id)" class="btn btn-primary btn-sm my-3 rounded-3 mx-3">Change Active</button>
+          <button (click)="deleteUser(user._id)" class="btn btn-danger btn-sm rounded-3">Delete</button>
+        </td>
+      </tr>
+      }
+      @empty { <tr><td colspan="7" class="text-center"><h3>No users found</h3></td></tr> }
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Section -->
+<div class="container m-auto mt-5 w-25">
+  <ul class="pagination justify-content-center">
+    @if(pagination?.prev) {
+      <li (click)="changePage(pagination.prev)" class="page-item">
+        <button class="page-link">Previous</button>
+      </li>
+    }
+    @if(pagination?.currentPage !== 1) {
+      <li (click)="changePage(1)" class="page-item">
+        <button class="page-link">1</button>
+      </li>
+    }
+    <li class="page-item active"><button class="page-link">{{pagination?.currentPage}}</button></li>
+    @if(pagination?.currentPage !== pagination?.totalPages) {
+      <li (click)="changePage(pagination.totalPages!)" class="page-item">
+        <button class="page-link">{{pagination.totalPages}}</button>
+      </li>
+    }
+    @if(pagination?.next) {
+      <li (click)="changePage(pagination.next)" class="page-item">
+        <button class="page-link">Next</button>
+      </li>
+    }
+  </ul>
+</div>
+
+<!-- User Details Modal -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="selectedUser">
+          <p><strong>ID:</strong> {{selectedUser._id}}</p>
+          <p><strong>Name:</strong> {{selectedUser.name}}</p>
+          <p><strong>Email:</strong> {{selectedUser.email}}</p>
+          <p><strong>Role:</strong> {{selectedUser.role}}</p>
+          <p><strong>Active:</strong> @if(selectedUser.active) {Yes} @else {No}</p>
+          
+          <hr>
+
+          <!-- Update Data Section -->
+          <div class="mb-3">
+            <h5>Update User Data</h5>
+            <form [formGroup]="updateUserForm" (ngSubmit)="updateUser(selectedUser._id, updateUserForm)">
+              <div class="mb-3">
+                <label for="updateName" class="form-label">Name</label>
+                <input id="updateName" formControlName="name" class="form-control" type="text" placeholder="Name">
+              </div>
+              <div class="mb-3">
+                <label for="updateEmail" class="form-label">Email</label>
+                <input id="updateEmail" formControlName="email" class="form-control" type="email" placeholder="Email">
+              </div>
+              <button [disabled]="updateUserForm.invalid" type="submit" class="btn btn-primary">Update Data</button>
+            </form>
+          </div>
+
+          <hr>
+
+          <!-- Update Password Section -->
+          <div class="mb-3">
+            <h5>Update Password</h5>
+            <form [formGroup]="updatePasswordForm" (ngSubmit)="updatePassword(selectedUser._id, updatePasswordForm)">
+              <div class="mb-3">
+                <label for="updatePassword" class="form-label">New Password</label>
+                <input id="updatePassword" formControlName="password" class="form-control" type="password" placeholder="New Password">
+              </div>
+              <button [disabled]="updatePasswordForm.invalid" type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

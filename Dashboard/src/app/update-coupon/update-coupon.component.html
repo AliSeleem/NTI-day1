@@ -1,0 +1,43 @@
+<div class="w-50 mt-5 m-auto shadow p-4">
+  <h1 class="text-center">Update Coupon</h1>
+  <form [formGroup]="couponForm" (ngSubmit)="updateCoupon(coupon?._id, couponForm)">
+    
+    <!-- Coupon Name -->
+    <div class="p-3">
+      <input formControlName="name" class="form-control" type="text" [value]="coupon?.name" placeholder="Coupon Name">
+      <!-- Error Handling for Coupon Name -->
+      <div class="p-0 mt-3" *ngIf="couponForm.get('name')?.errors && couponForm.get('name')?.touched">
+        <p *ngIf="couponForm.get('name')?.errors?.['required']" class="text-danger">Coupon name is required</p>
+      </div>
+    </div>
+    
+    <!-- Discount -->
+    <div class="p-3">
+      <input formControlName="discount" class="form-control" type="number" [value]="coupon?.discount" placeholder="Discount (%)">
+      <!-- Error Handling for Discount -->
+      <div class="p-0 mt-3" *ngIf="couponForm.get('discount')?.errors && couponForm.get('discount')?.touched">
+        <p *ngIf="couponForm.get('discount')?.errors?.['required']" class="text-danger">Coupon discount is required</p>
+      </div>
+    </div>
+    
+    <!-- Expire Time -->
+    <div class="p-3">
+      <input formControlName="expireTime" class="form-control" type="date" [value]="coupon?.expireTime | date:'yyyy-MM-dd'" placeholder="Expire Time">
+      <!-- Error Handling for Expire Time -->
+      <div class="p-0 mt-3" *ngIf="couponForm.get('expireTime')?.errors && couponForm.get('expireTime')?.touched">
+        <p *ngIf="couponForm.get('expireTime')?.errors?.['required']" class="text-danger">Expire time is required</p>
+      </div>
+    </div>
+    
+    <!-- Global Error Message -->
+    <div class="text-danger mt-3" *ngIf="couponError !== ''">
+      <p>{{couponError}}</p>
+    </div>
+    
+    <!-- Form Buttons -->
+    <div class="mt-3">
+      <button [disabled]="couponForm.invalid" class="btn btn-primary mx-3">Update</button>
+      <a routerLink="/coupons" class="btn btn-danger">Cancel</a>
+    </div>
+  </form>
+</div>

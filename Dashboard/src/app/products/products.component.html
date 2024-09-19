@@ -1,0 +1,128 @@
+<div class="w-75 m-auto">
+  <!-- Header Section -->
+  <h2 class="text-center my-5">All Products</h2>
+  <hr class="my-3">
+  
+  <!-- Controls (Create and Search) -->
+  <div class="d-flex justify-content-between mb-3">
+    <a class="btn btn-primary" routerLink="create">Create Product</a>
+    <input (change)="searchData(searchInput.value)" #searchInput class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search">
+  </div>
+  
+  <hr class="my-3">
+
+  <!-- Products Table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Subcategory</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Sold</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(product of products; track product._id) {
+      <tr>
+        <td>{{$index + 1}}</td>
+        <td>{{product?._id | slice:-4}}</td>
+        <td>
+          <img class="me-3" width="50px" [src]="productImage + product?.cover" [alt]="product?.name">
+          {{product?.name}}
+        </td>
+        <td>{{product?.category?.name}}</td>
+        <td>{{product?.subCategory?.name}}</td>
+        <td>{{product?.price | currency}}</td>
+        <td>{{product?.quantity}}</td>
+        <td>{{product?.sold}}</td>
+        <td>
+          <!-- Trigger Button to Open the Modal -->
+          <button type="button" (click)="this.productDetails = product" class="btn btn-primary btn-sm rounded-3 mx-1" data-bs-toggle="modal" data-bs-target="#productDetailsModal">
+            Details
+          </button>
+          <a [routerLink]="['/layout/products', product._id, 'update']" class="btn btn-warning btn-sm rounded-3 mx-1">Update</a>
+          <button (click)="deleteProduct(product._id)" class="btn btn-danger btn-sm rounded-3 mx-1">Delete</button>
+        </td>
+      </tr>
+      }
+      @empty { <tr><td colspan="9" class="text-center"><h3>No products found</h3></td></tr> }
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Section -->
+<div class="container m-auto mt-5 w-25">
+  <ul class="pagination justify-content-center">
+    @if(pagination?.prev) { 
+      <li (click)="changePage(pagination.prev)" class="page-item">
+        <button class="page-link">Previous</button>
+      </li>
+    }
+    @if(pagination?.currentPage !== 1) { 
+      <li (click)="changePage(1)" class="page-item">
+        <button class="page-link">1</button>
+      </li> 
+    }
+    <li class="page-item">
+      <button class="page-link">{{pagination?.currentPage}}</button>
+    </li>
+    @if(pagination?.currentPage !== pagination?.totalPages) { 
+      <li (click)="changePage(pagination.totalPages!)" class="page-item">
+        <button class="page-link">{{pagination.totalPages}}</button>
+      </li> 
+    }
+    @if(pagination?.next) { 
+      <li (click)="changePage(pagination.next)" class="page-item">
+        <button class="page-link">Next</button>
+      </li> 
+    }
+  </ul>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailsModalLabel">{{productDetails!.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <!-- Product Image Section -->
+          <div class="col-md-6 d-flex flex-column align-items-center">
+            <img class="img-fluid mb-3" [src]="productImage + productDetails!.cover" alt="{{productDetails!.name}}" style="max-width: 80%;">
+            
+            <!-- Product Gallery Images -->
+            <div class="d-flex justify-content-center">
+              <img *ngFor="let image of productDetails!.images" class="img-thumbnail mx-1" [src]="productImage + image" alt="Gallery Image" style="width: 70px; height: 70px;">
+            </div>
+          </div>
+
+          <!-- Product Info Section -->
+          <div class="col-md-6">
+            <h4>Product Details</h4>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Category:</strong> {{productDetails!.category?.name}}</li>
+              <li class="list-group-item"><strong>Subcategory:</strong> {{productDetails!.subcategory?.name}}</li>
+              <li class="list-group-item"><strong>Price:</strong> {{productDetails!.price | currency}}</li>
+              <li class="list-group-item"><strong>Quantity Available:</strong> {{productDetails!.quantity}}</li>
+              <li class="list-group-item"><strong>Sold:</strong> {{productDetails!.sold}}</li>
+            </ul>
+
+            <div class="mt-4">
+              <h5>Description</h5>
+              <p>{{productDetails!.description}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

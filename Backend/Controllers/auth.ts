@@ -12,7 +12,7 @@ import { sendMail } from "../utils/sendMail";
 export const signup = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const user: Users = await usersModel.create(req.body);
-		const token = createToken(user._id);
+		const token = createToken(user._id, user.role);
 		res.status(201).json({ data: user, token });
 	}
 );
@@ -23,7 +23,7 @@ export const login = asyncHandler(
 		if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
 			return next(new ApiError("Invalid email or password", 401));
 		}
-		const token = createToken(user._id);
+		const token = createToken(user._id, user.role);
 		res.status(200).json({ message: "logged in successfully", token });
 	}
 );
@@ -48,8 +48,9 @@ export const protectRoutes = asyncHandler(
 		}
 		// 4- check if password changed
 		if (currentUser.passwordChangedAt instanceof Date) {
-			const changedPasswordTime: number =
-				currentUser.passwordChangedAt.getTime() / 1000;
+			const changedPasswordTime: number = parseInt(
+				(currentUser.passwordChangedAt.getTime() / 1000).toString()
+			);
 			if (changedPasswordTime > decodedToken.iat) {
 				return next(new ApiError("please login again", 401));
 			}
@@ -100,7 +101,7 @@ export const forgetPassword = asyncHandler(
 		} catch (error) {
 			return next(new ApiError("error sending email", 500));
 		}
-		const resetToken = createResetToken(user._id);
+		const resetToken = createResetToken(user._id, user.role);
 		res.json({ message: "reset password code sent to your email", resetToken });
 	}
 );

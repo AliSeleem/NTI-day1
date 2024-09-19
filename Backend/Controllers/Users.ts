@@ -94,14 +94,14 @@ export const updateLoggedUser = asyncHandler(
 export const changeLoggedUserPassword = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const user = await usersModel.findByIdAndUpdate(
-			req.user?.id,
+			req.user?._id,
 			{
 				password: await bcrypt.hash(req.body.password, 13),
 				passwordChangedAt: Date.now(),
 			},
 			{ new: true }
 		);
-		const token: string = createToken(user?._id);
+		const token: string = createToken(user?._id, user?.role!);
 		res.status(200).json({ message: "password changed successfully", token });
 	}
 );

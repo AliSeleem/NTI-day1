@@ -12,7 +12,7 @@ const productSchema: Schema = new Schema<Product>(
 			maxlength: 50,
 		},
 		price: { type: Number, required: true, min: 1, max: 1000000 },
-		priceAfterDiscount: { type: Number, required: true, min: 1, max: 1000000 },
+		priceAfterDiscount: { type: Number, min: 1, max: 1000000 },
 		quantity: { type: Number, default: 0, min: 0 },
 		sold: { type: Number, default: 0 },
 		ratingAverage: { type: Number, min: 0, max: 5 },

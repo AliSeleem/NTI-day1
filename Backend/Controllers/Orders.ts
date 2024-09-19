@@ -47,7 +47,7 @@ export const createOrder = asyncHandler(
 			user: req.user?._id,
 			totalPrice,
 			taxPrice,
-			address: req.body.address,
+			address: req.body.address || "minia, Egypt",
 			cartItems: cart.cartItems,
 		});
 		// 4 update product quantity and sold, and delete cart

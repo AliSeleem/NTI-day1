@@ -20,25 +20,27 @@ export const uploadProductImages = uploadMultiImages([
 
 export const resizeImages = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		if (req.files) {
-			if (req.files.cover) {
+		if (req.body.files) {
+			if (req.body.files.cover) {
 				const coverName: string = `Product-${Date.now()}-cover.png`;
-				await sharp(req.files.cover[0].buffer)
+				await sharp(req.body.files.cover.buffer)
 					.toFormat("png")
 					.png({ quality: 95 })
 					.toFile(`uploads/products/${coverName}`);
 				req.body.cover = coverName;
 			}
-			if (req.files.images) {
+			if (req.body.files.images) {
 				req.body.images = [];
-				req.files.images.map(async (img: any, index: number) => {
-					const imageName: string = `Product-${Date.now()}N${index + 1}.png`;
-					await sharp(img.buffer)
-						.toFormat("png")
-						.png({ quality: 95 })
-						.toFile(`uploads/products/${imageName}`);
-					req.body.images.push(imageName);
-				});
+				await Promise.all(
+					req.body.files.images.map(async (img: any, index: number) => {
+						const imageName: string = `Product-${Date.now()}N${index + 1}.png`;
+						await sharp(img.buffer)
+							.toFormat("png")
+							.png({ quality: 95 })
+							.toFile(`uploads/products/${imageName}`);
+						req.body.images.push(imageName);
+					})
+				);
 			}
 		}
 		next();

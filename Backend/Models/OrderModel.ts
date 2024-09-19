@@ -24,8 +24,8 @@ const OrderSchema: Schema = new Schema<Order>(
 );
 
 OrderSchema.pre<Order>(/^find/, function (next) {
+	this.populate({ path: "user", select: "name email" });
 	this.populate({ path: "cartItems.product", select: "name cover" });
-	this.populate({ path: "user", select: "name image email" });
 	next();
 });
 

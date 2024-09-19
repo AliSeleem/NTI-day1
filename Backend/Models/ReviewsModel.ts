@@ -36,6 +36,15 @@ reviewsSchema.statics.calcRatingAndquantity = async function (productId) {
 	}
 };
 
+reviewsSchema.post<reviews>("findOneAndDelete", async function (doc) {
+	const reviewDoc = doc as unknown as reviews;
+	if (reviewDoc.product) {
+		await (reviewDoc.constructor as any).calcRatingAndQuantity(
+			reviewDoc.product
+		);
+	}
+});
+
 reviewsSchema.post<reviews>("save", async function () {
 	await (this.constructor as any).calcRatingAndquantity(this.product);
 });

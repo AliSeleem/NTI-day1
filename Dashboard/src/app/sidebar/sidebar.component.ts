@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,4 +16,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 })
 export class SidebarComponent {
   display: boolean = false;
+
+  constructor(private _AuthService: AuthService, private _Router: Router) {}
+
+  logout() {
+    this._AuthService.logout();
+    this._Router.navigate(['/login']);
+  }
 }

@@ -106,7 +106,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   setSearch(searchText: string) {
     this.search = searchText;
-    this.search = '';
     this.category = '';
     this.subCategoris = [];
     this.subCategory = '';

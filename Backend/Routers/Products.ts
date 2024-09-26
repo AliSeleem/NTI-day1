@@ -38,6 +38,8 @@ ProductsRouter.route("/:id")
 		protectRoutes,
 		checkActive,
 		allowedTo("manager", "admin"),
+		uploadProductImages,
+		resizeImages,
 		updateProductValidator,
 		updateProduct
 	)

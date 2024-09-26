@@ -73,7 +73,6 @@ export class UpdateProductComponent implements OnInit {
   }
 
   loadSubcategories(categoryId: string) {
-    console.log(categoryId);
     this._SubcategoriesService.getSpecificSubcategories(categoryId).subscribe({
       next: (res) => {
         this.subcategories = res.data;

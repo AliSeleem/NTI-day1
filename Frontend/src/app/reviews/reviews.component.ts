@@ -64,6 +64,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
         }, 1000);
       },
       error: (err) => {
+        console.log(err);
         this.state = 'Error removing review';
         setTimeout(() => {
           this.state = '';
@@ -92,6 +93,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
           }, 1000);
         },
         error: (err) => {
+          console.log(err);
           this.state = 'Error updating review';
           setTimeout(() => {
             this.state = '';

@@ -33,27 +33,36 @@
 </div>
 
 @if (!isObjectEmpty(this.details)) {
-  <div class="container text-center bg-secondary details text-white bg-black">
-    <a (click)="this.details = {}" class="text-muted"><i class="fas fa-times"></i></a>
-    <h1>Order details</h1>
+  <div class="container p-4 bg-black text-white details rounded shadow">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Order Details</h1>
+    <a (click)="this.details = {}" class="text-white">
+      <i class="fas fa-times"></i>
+    </a>
+  </div>
+
+  <div class="mb-2">
     <div class="d-flex justify-content-between">
-      <p>Created At:</p>
-      <p>{{details.createdAt}}</p>
+      <p class="fw-bold">Created At:</p>
+      <p>{{ details.createdAt }}</p>
     </div>
     <div class="d-flex justify-content-between">
-      <p>Paid:</p>
-      <p>{{details.isPaid? 'Yes' : 'No'}}</p>
+      <p class="fw-bold">Paid:</p>
+      <p>{{ details.isPaid ? 'Yes' : 'No' }}</p>
     </div>
     <div class="d-flex justify-content-between">
-      <p>Delivered:</p>
-      <p>{{details.isDelivered? 'Yes' : 'No'}}</p>
+      <p class="fw-bold">Delivered:</p>
+      <p>{{ details.isDelivered ? 'Yes' : 'No' }}</p>
     </div>
     <div class="d-flex justify-content-between">
-      <p>Address:</p>
-      <p>{{details.address}}</p>
+      <p class="fw-bold">Address:</p>
+      <p>{{ details.address }}</p>
     </div>
-    <h3>Oreder products</h3>
-    <table class="table align-middle text-center">
+  </div>
+
+  <h3 class="h5 mt-4">Order Products</h3>
+  <div class="table-responsive">
+    <table class="table table-dark table-striped align-middle text-center">
       <thead>
         <tr>
           <th scope="col">Product Name</th>
@@ -62,19 +71,25 @@
           <th scope="col">Unit Price</th>
         </tr>
       </thead>
-      <tbody class="table-group-divider justify-content-center overflow-y-scroll">
+      <tbody>
         @for (prod of details.cartItems; track prod._id) {
-          <td scope="row">
-            <div class="d-flex gap-2" >
-              <img [src]="productImage+prod.product?.cover" [alt]="prod.name" style="height: 2em; width: 1.7em; object-fit: cover;">
-              <p>{{prod.product.name}}</p>
-            </div>
-          </td>
-          <td>{{prod.product.category?.name}}</td>
-          <td>{{prod.product.subCategory?.name}}</td>
-          <td>{{prod.price|currency}}</td>
+          <tr>
+            <td>
+              <div class="d-flex gap-2 align-items-center">
+                <img [src]="productImage + prod.product?.cover" 
+                     [alt]="prod.product.name" 
+                     class="img-fluid rounded" 
+                     style="height: 2em; width: 1.7em; object-fit: cover;">
+                <p class="mb-0">{{ prod.product.name }}</p>
+              </div>
+            </td>
+            <td>{{ prod.product.category?.name }}</td>
+            <td>{{ prod.product.subCategory?.name }}</td>
+            <td>{{ prod.price | currency }}</td>
+          </tr>
         }
       </tbody>
     </table>
   </div>
+</div>
 }

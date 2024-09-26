@@ -31,7 +31,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           this.products = res.data;
-          console.log(this.products);
           this.pagination = res.pagination;
         },
         error: (err) => {},

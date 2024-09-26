@@ -24,12 +24,13 @@ export class AddProductComponent implements OnInit, OnDestroy {
   getQuantity: string = '0';
   getCategory: string = '';
   getSubcategory: string = '';
-  files: any = {};
+  cover: File | null = null;
+  images: File[] = [];
 
   setCover(event: any) {
     const cover = event.target.files[0];
     if (cover) {
-      this.files.cover = cover;
+      this.cover = cover;
     }
   }
 
@@ -39,16 +40,16 @@ export class AddProductComponent implements OnInit, OnDestroy {
       images.push(event.target.files[i]);
     }
     if (images) {
-      this.files.images = images;
+      this.images = images;
     }
   }
 
   constructor(
+    private _Router: Router,
     private _AuthService: AuthService,
     private _ProductsService: ProductsService,
     private _CategoriesService: CategoriesService,
-    private _SubcategoriesService: SubcategoriesService,
-    private _Router: Router
+    private _SubcategoriesService: SubcategoriesService
   ) {}
 
   loadCategories() {
@@ -86,7 +87,12 @@ export class AddProductComponent implements OnInit, OnDestroy {
     formData.append('subCategory', this.getSubcategory);
     formData.append('price', this.getPrice);
     formData.append('quantity', this.getQuantity);
-    formData.append('files', this.files);
+    if (this.cover) {
+      formData.append('cover', this.cover);
+    }
+    if (this.images.length) {
+      this.images.forEach((image) => formData.append('images', image));
+    }
 
     this._ProductsService.createProduct(formData).subscribe({
       next: (res) => {

@@ -20,19 +20,24 @@ export const uploadProductImages = uploadMultiImages([
 
 export const resizeImages = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		if (req.body.files) {
-			if (req.body.files.cover) {
+		if (req.files) {
+			// Accessing cover image
+			const cover = (req.files as any).cover?.[0]; // req.files.cover should be an array
+			if (cover) {
 				const coverName: string = `Product-${Date.now()}-cover.png`;
-				await sharp(req.body.files.cover.buffer)
+				await sharp(cover.buffer)
 					.toFormat("png")
 					.png({ quality: 95 })
 					.toFile(`uploads/products/${coverName}`);
 				req.body.cover = coverName;
 			}
-			if (req.body.files.images) {
+
+			// Accessing additional images
+			const images = (req.files as any).images; // req.files.images should be an array
+			if (images) {
 				req.body.images = [];
 				await Promise.all(
-					req.body.files.images.map(async (img: any, index: number) => {
+					images.map(async (img: any, index: number) => {
 						const imageName: string = `Product-${Date.now()}N${index + 1}.png`;
 						await sharp(img.buffer)
 							.toFormat("png")

@@ -25,17 +25,6 @@ const usersSchema: Schema = new Schema<Users>(
 	{ timestamps: true }
 );
 
-// const imageUrl = (doc: Users) => {
-// 	if (doc.image) {
-// 		const imageUrl: string = `${process.env.BASE_URL}/users/${doc.image}`;
-// 		doc.image = imageUrl;
-// 	}
-// };
-
-// usersSchema.post("init", (doc: Users) => {
-// 	imageUrl(doc);
-// });
-
 usersSchema.pre<Users>("save", async function (next) {
 	if (!this.isModified("password")) {
 		return next;

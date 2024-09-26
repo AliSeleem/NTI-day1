@@ -46,7 +46,6 @@ export class UpdateCouponComponent implements OnInit, OnDestroy {
   }
 
   updateCoupon(couponId: string, formData: FormGroup) {
-    console.log(formData.value);
     if (formData.value.name === null) {
       formData.value.name = this.coupon.name;
     }
@@ -58,7 +57,6 @@ export class UpdateCouponComponent implements OnInit, OnDestroy {
         this.coupon.expireTime
       ).transform;
     }
-    console.log(formData.value);
     this._CouponService.updateCoupon(couponId, formData.value).subscribe({
       next: (res) => {
         alert('coupon updated successfully');
